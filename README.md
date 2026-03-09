@@ -58,12 +58,12 @@ The trickiest part was making sure the sorting and hero updates were actually re
 
 ## Run locally
 
+To get a local copy up and running, follow these steps.
+
 ```bash
+git clone https://github.com/prolajumokeoni/CountdownApp
+cd CountdownApp
 npm install
 npm run dev
 ```
-
-```bash
-npm run build
-npm run preview
-```
+ 
