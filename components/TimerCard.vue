@@ -25,13 +25,13 @@
       </div>
 
       <div class="card-actions">
-        <button class="btn-icon" title="Edit" @click="$emit('edit')">
+        <button class="inline-flex items-center justify-center w-[30px] h-[30px] bg-transparent border-0 rounded-lg text-[var(--text-muted)] cursor-pointer transition-all duration-150 hover:bg-black/[0.07] hover:text-[var(--text)]" title="Edit" @click="$emit('edit')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
         </button>
-        <button class="btn-icon btn-icon--danger" title="Delete" @click="$emit('delete')">
+        <button class="inline-flex items-center justify-center w-[30px] h-[30px] bg-transparent border-0 rounded-lg text-[var(--text-muted)] cursor-pointer transition-all duration-150 hover:bg-red-500/10 hover:text-red-600" title="Delete" @click="$emit('delete')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
             <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -182,7 +182,7 @@ const breakdown = computed(() => {
 
 // ── Urgency ──────────────────────────────────────────────────────
 const URGENCY = {
-  distant:   { color: '#6366f1', tint: 'rgba(99,102,241,0.04)',  label: 'On the horizon'  },
+  distant:   { color: '#6366f1', tint: 'rgba(99,102,241,0.04)',  label: 'Coming Soon'  },
   soon:      { color: '#a855f7', tint: 'rgba(168,85,247,0.08)',  label: 'Getting closer'  },
   near:      { color: '#f59e0b', tint: 'rgba(245,158,11,0.13)',  label: 'Almost time!'    },
   imminent:  { color: '#ef4444', tint: 'rgba(239,68,68,0.18)',   label: 'Happening today' },

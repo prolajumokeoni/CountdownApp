@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 
-const STORAGE_KEY = 'countdown_v2'
+const STORAGE_KEY = 'countdown_v4'
 
 export const CATEGORIES = {
   birthday:    { label: 'Birthday',    icon: '🎂' },
@@ -37,9 +37,11 @@ function makeDefaultTimers() {
       id: 'demo-1',
       name: "International Women's Day 🌸",
       category: 'holiday',
-      targetDate: new Date(y, 2, 8, 23, 59, 0).toISOString(),
-      description: 'Celebrating the achievements and resilience of women everywhere',
-      createdAt: sub(30),
+      targetDate: new Date(y, 2, 9, 8, 0, 0).toISOString(),
+      description: 'Give to Gain',
+      heroBg: 'linear-gradient(160deg, #831843, #db2777)',
+      heroAccent: '#fbcfe8',
+      createdAt: sub(2),
     },
     {
       id: 'demo-2',
@@ -59,11 +61,11 @@ function makeDefaultTimers() {
     },
     {
       id: 'demo-4',
-      name: 'Summer Solstice 🌞',
+      name: 'Easter Sunday 🐣',
       category: 'holiday',
-      targetDate: new Date(y, 5, 21, 12, 0, 0).toISOString(),
-      description: 'Longest day of the year — soak it up',
-      createdAt: sub(60),
+      targetDate: new Date(y, 3, 5, 12, 0, 0).toISOString(),
+      description: 'Easter Sunday Loading',
+      createdAt: sub(30),
     },
   ]
 }

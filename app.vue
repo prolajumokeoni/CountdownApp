@@ -1,60 +1,70 @@
 <template>
-  <div class="app">
+  <div class="page">
 
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <span class="logo-mark" aria-hidden="true">◉</span>
-        <h1 class="site-title">Countdown</h1>
-      </div>
-      <button class="btn-primary" @click="openNew">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <!-- Header: only visible when timers exist -->
+    <header v-if="sortedTimers.length" class="header">
+      <button class="inline-flex items-center gap-[0.35rem] py-2 px-4 bg-[var(--text)] text-white border-0 rounded-full text-[0.8rem] font-semibold cursor-pointer tracking-[0.01em] transition-all duration-150 hover:bg-[#2d2b4e] active:scale-[0.97]" @click="openNew">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
           <line x1="12" y1="5" x2="12" y2="19"/>
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
-        New Timer
+        New Countdown
       </button>
     </header>
 
-    <!-- Hero flip clock: featured timer displayed as flip tiles -->
+    <!-- Hero: always visible, zeros when no timers -->
     <section
-      v-if="heroConfig"
       class="hero"
-      :style="{ background: heroConfig.bg, '--flip-accent': heroConfig.accent }"
+      :class="{ 'hero--full': !sortedTimers.length }"
+      :style="{ background: heroDisplay.bg, '--flip-accent': heroDisplay.accent }"
     >
-      <p class="hero-eye">Next up</p>
-      <h2 class="hero-title">{{ featuredTimer.name }}</h2>
-      <div class="flip-row">
-        <template v-if="heroConfig.time.days > 0">
-          <FlipUnit :value="heroConfig.time.days" label="days" />
+      <div class="hero-center">
+        <p class="hero-eye">
+          {{ !heroConfig ? 'No countdowns yet' : heroMsLeft <= 0 ? "Time\'s up" : 'Next up' }}
+        </p>
+        <h2 class="hero-title" :class="{ 'hero-title--empty': !heroConfig }">
+          {{ heroConfig ? featuredTimer.name : 'Start your first countdown' }}
+        </h2>
+        <div class="flip-row">
+          <template v-if="heroDisplay.time.days > 0">
+            <FlipUnit :value="heroDisplay.time.days" label="days" />
+            <span class="sep">:</span>
+          </template>
+          <FlipUnit :value="heroDisplay.time.hours" label="hrs" />
           <span class="sep">:</span>
-        </template>
-        <FlipUnit :value="heroConfig.time.hours" label="hrs" />
-        <span class="sep">:</span>
-        <FlipUnit :value="heroConfig.time.mins" label="min" />
-        <span class="sep">:</span>
-        <FlipUnit :value="heroConfig.time.secs" label="sec" />
+          <FlipUnit :value="heroDisplay.time.mins" label="min" />
+          <span class="sep">:</span>
+          <FlipUnit :value="heroDisplay.time.secs" label="sec" />
+        </div>
+
+        <!-- CTA when empty -->
+        <button
+          v-if="!sortedTimers.length"
+          class="inline-flex items-center gap-2 mt-8 py-3 px-7 bg-white/15 hover:bg-white/25 text-white border border-white/25 rounded-full text-[0.9rem] font-semibold cursor-pointer tracking-[0.01em] transition-all duration-200 backdrop-blur-sm active:scale-[0.97]"
+          @click="openNew"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Create your first countdown
+        </button>
       </div>
     </section>
 
     <!-- Timer grid -->
-    <main v-if="sortedTimers.length" class="grid">
-      <TimerCard
-        v-for="timer in sortedTimers"
-        :key="timer.id"
-        :timer="timer"
-        :featured="timer.id === featuredId"
-        @edit="openEdit(timer)"
-        @delete="confirmDelete(timer.id)"
-      />
-    </main>
+    <div v-if="sortedTimers.length" class="app">
+      <main class="grid">
+        <TimerCard
+          v-for="timer in sortedTimers"
+          :key="timer.id"
+          :timer="timer"
+          :featured="timer.id === featuredId"
+          @edit="openEdit(timer)"
+          @delete="confirmDelete(timer.id)"
+        />
+      </main>
 
-    <!-- Empty state -->
-    <div v-else class="empty">
-      <div class="empty-icon" aria-hidden="true">⏳</div>
-      <h2 class="empty-title">No timers yet</h2>
-      <p class="empty-sub">Create your first countdown for an event that matters.</p>
-      <button class="btn-primary" @click="openNew">Create a Timer</button>
     </div>
 
     <!-- Form modal -->
@@ -98,32 +108,31 @@ function handleSubmit(data) {
   closeForm()
 }
 
+// ── Reactive clock (drives sorting, featured selection, and hero) ──
+const now = ref(Date.now())
+let heroTick = null
+onMounted(() => { heroTick = setInterval(() => { now.value = Date.now() }, 1000) })
+onUnmounted(() => clearInterval(heroTick))
+
 // ── Sorted timers ─────────────────────────────────────────────────
 const sortedTimers = computed(() => {
-  const now = Date.now()
+  const t = now.value
   return [...timers.value].sort((a, b) => {
-    const aLeft = new Date(a.targetDate).getTime() - now
-    const bLeft = new Date(b.targetDate).getTime() - now
+    const aLeft = new Date(a.targetDate).getTime() - t
+    const bLeft = new Date(b.targetDate).getTime() - t
     if (aLeft >= 0 && bLeft >= 0) return aLeft - bLeft
     if (aLeft < 0  && bLeft < 0)  return bLeft - aLeft
     return aLeft >= 0 ? -1 : 1
   })
 })
 
-// Most urgent *upcoming* event gets the featured slot
+// Most urgent upcoming event; falls back to most recently expired if none upcoming
 const featuredId = computed(() => {
-  const now = Date.now()
   const first = sortedTimers.value.find(
-    (t) => new Date(t.targetDate).getTime() > now
+    (t) => new Date(t.targetDate).getTime() > now.value
   )
-  return sortedTimers.value.length >= 2 ? (first?.id ?? null) : null
+  return (first ?? sortedTimers.value[0])?.id ?? null
 })
-
-// ── Hero flip clock ───────────────────────────────────────────────
-const now = ref(Date.now())
-let heroTick = null
-onMounted(() => { heroTick = setInterval(() => { now.value = Date.now() }, 1000) })
-onUnmounted(() => clearInterval(heroTick))
 
 const featuredTimer = computed(() =>
   featuredId.value ? timers.value.find((t) => t.id === featuredId.value) ?? null : null
@@ -134,12 +143,13 @@ const heroMsLeft = computed(() =>
 )
 
 const heroConfig = computed(() => {
-  if (!featuredTimer.value || heroMsLeft.value <= 0) return null
-  const ms = heroMsLeft.value
+  if (!featuredTimer.value) return null
+  const ms = Math.max(0, heroMsLeft.value)
+  const expired = heroMsLeft.value <= 0
 
   let urg = 'distant'
-  if (ms < 3_600_000)       urg = 'happening'
-  else if (ms < 86_400_000) urg = 'imminent'
+  if (expired || ms < 3_600_000) urg = 'happening'
+  else if (ms < 86_400_000)      urg = 'imminent'
   else {
     const d = ms / 86_400_000
     if (d < 7)       urg = 'near'
@@ -147,11 +157,11 @@ const heroConfig = computed(() => {
   }
 
   const PALETTE = {
-    distant:   { bg: '#3730a3', accent: '#a5b4fc' },
-    soon:      { bg: '#5b21b6', accent: '#d8b4fe' },
-    near:      { bg: '#92400e', accent: '#fde68a' },
-    imminent:  { bg: '#991b1b', accent: '#fca5a5' },
-    happening: { bg: '#7f1d1d', accent: '#fca5a5' },
+    distant:   { bg: 'linear-gradient(160deg, #0f172a, #1e1b4b)', accent: '#818cf8' },
+    soon:      { bg: 'linear-gradient(160deg, #1e1b4b, #4c1d95)', accent: '#c084fc' },
+    near:      { bg: 'linear-gradient(160deg, #0c4a6e, #1e3a5f)', accent: '#38bdf8' },
+    imminent:  { bg: 'linear-gradient(160deg, #450a0a, #7f1d1d)', accent: '#fca5a5' },
+    happening: { bg: 'linear-gradient(160deg, #1c0019, #450a0a)', accent: '#f0abfc' },
   }
 
   const secs  = Math.floor(ms / 1000)    % 60
@@ -159,8 +169,19 @@ const heroConfig = computed(() => {
   const hours = Math.floor(ms / 3600000) % 24
   const days  = Math.floor(ms / 86400000)
 
-  return { ...PALETTE[urg], time: { days, hours, mins, secs } }
+  const colors = featuredTimer.value.heroBg
+    ? { bg: featuredTimer.value.heroBg, accent: featuredTimer.value.heroAccent }
+    : PALETTE[urg]
+
+  return { ...colors, time: { days, hours, mins, secs } }
 })
+
+const EMPTY_HERO = {
+  bg: 'linear-gradient(160deg, #0f172a, #1e1b4b)',
+  accent: '#818cf8',
+  time: { days: 0, hours: 0, mins: 0, secs: 0 },
+}
+const heroDisplay = computed(() => heroConfig.value ?? EMPTY_HERO)
 
 // ── Delete with undo toast ────────────────────────────────────────
 function confirmDelete(id) {
@@ -198,136 +219,114 @@ function confirmDelete(id) {
 </script>
 
 <style scoped>
-.app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem 5rem;
+/* ── Page: lock to viewport, no scroll ── */
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* ── Header ── */
 .header {
+  flex-shrink: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.75rem 0 2rem;
+  justify-content: flex-end;
+  padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 2rem;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.logo-mark {
-  font-size: 1.1rem;
-  color: #6366f1;
-  line-height: 1;
-}
-
-.site-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-
-/* ── Hero flip clock ── */
+/* ── Hero: upper portion of viewport ── */
 .hero {
-  border-radius: var(--radius);
-  padding: 3rem 1.5rem 3.5rem;
+  flex: 0 0 48vh;
+  transition: flex 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  margin-bottom: 2.5rem;
-  --tile-w: 110px;
-  --tile-h: 130px;
-  --tile-font: 5rem;
-  --tile-r: 18px;
+  --tile-w: 85px;
+  --tile-h: 100px;
+  --tile-font: 3.8rem;
+  --tile-r: 14px;
+}
+
+.hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
 }
 
 .hero-eye {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .hero-title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.03em;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.75rem;
   text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.hero-title--empty {
+  opacity: 0.4;
+  font-weight: 600;
 }
 
 .flip-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
 }
 
 .sep {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   color: rgba(255,255,255,0.25);
   line-height: 1;
-  padding-bottom: 1.4rem;
+  padding-bottom: 1.2rem;
   user-select: none;
 }
 
-@media (max-width: 600px) {
-  .hero {
-    --tile-w: 75px;
-    --tile-h: 90px;
-    --tile-font: 3.2rem;
-    --tile-r: 12px;
-    padding: 2rem 1rem 2.5rem;
-  }
-  .hero-title { font-size: 1.2rem; margin-bottom: 1.75rem; }
-  .sep { font-size: 1.6rem; padding-bottom: 1rem; }
+.hero--full { flex: 1; }
+
+/* ── Grid area: fill remaining space ── */
+.app {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.5rem 2rem 2rem;
 }
 
-/* ── Grid ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
+  justify-content: center;
+  gap: 1rem;
 }
-
 
 /* ── Empty state ── */
 .empty {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   gap: 0.75rem;
-  padding: 6rem 1rem;
 }
 
-.empty-icon {
-  font-size: 3rem;
-  opacity: 0.4;
-  margin-bottom: 0.5rem;
-}
-
-.empty-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: 0.02em;
-}
-
-.empty-sub {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  max-width: 300px;
-}
+.empty-icon { font-size: 2.5rem; opacity: 0.4; margin-bottom: 0.5rem; }
+.empty-title { font-size: 1.1rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
+.empty-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; max-width: 300px; }
 </style>
