@@ -1,76 +1,62 @@
-# Nuxt Minimal Starter
+# Countdown App ◈
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Multiple countdown timers for important events like birthdays, deadlines, launches
+## Live Demo
 
-## Setup
+[countdown-app-pied.vercel.app](https://countdown-app-pied.vercel.app/)
 
-Make sure to install dependencies:
+https://github.com/user-attachments/assets/dc272190-9a96-4d2e-999b-60481bbdcf0f
+
+<img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c063b633-a5c1-4335-a24b-0aecd069cc50" />
+<img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c1d58a3b-6f63-49f1-a1b2-b78356bb6096" />
+<img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/b018c573-e0db-4f44-b32b-43d5df230382" />
+<img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c9609225-a607-440a-8240-b8bb62c145d5" />
+
+---
+
+##  How the App works
+
+- Create countdowns with a name, category, date & time, and an optional note 
+- 8 categories to choose from: Birthday, Anniversary, Deadline, Launch, Meeting, Travel, Holiday, Other 
+- The most urgent upcoming event always takes the hero spot at the top
+- Confetti fires when a countdown hits zero 
+
+---
+
+ 
+## Challenges
+
+The trickiest part was making sure the sorting and hero updates were actually reactive.  
+
+ 
+---
+
+## If I had more time
+
+ 
+- Drag to reorder / pin timers 
+
+---
+
+## Stack
+
+- [Vue 3](https://vuejs.org/) — Composition API with `<script setup>`
+- [Nuxt 3](https://nuxt.com/) — SSR off, used for structure and Tailwind integration
+- [Tailwind CSS](https://tailwindcss.com/) — utility classes for layout and buttons
+- [vue-datepicker-next](https://github.com/mengxiong10/vue-datepicker-next) — date & time picker
+- [vue-toastification](https://github.com/Maronato/vue-toastification) — toast notifications
+- `localStorage` for persistence — no backend needed
+
+---
+
+## Run locally
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
-
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# CountdownApp
