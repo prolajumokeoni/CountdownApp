@@ -1,0 +1,223 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f4f4f8;
+  --surface: #ffffff;
+  --surface-2: #f9f9fc;
+  --border: rgba(0, 0, 0, 0.07);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --text: #18182e;
+  --text-muted: #6b6b8a;
+  --text-dim: #a8a8c0;
+  --radius: 18px;
+  --radius-sm: 10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 99px; }
+
+/* ── Buttons ── */
+.btn-primary {
+  @apply inline-flex items-center gap-[0.4rem] py-[0.6rem] px-5
+         bg-indigo-500 text-white border-0 rounded-[var(--radius-sm)]
+         text-sm font-semibold cursor-pointer transition-[background,transform] duration-150;
+  font-family: inherit;
+}
+.btn-primary:hover { @apply bg-[#4f52e8]; }
+.btn-primary:active { @apply scale-[0.97]; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.25rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-icon:hover { background: rgba(0, 0, 0, 0.07); color: var(--text); }
+.btn-icon--danger:hover { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+
+/* ── Form fields ── */
+.field { display: flex; flex-direction: column; gap: 0.45rem; }
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.field input,
+.field textarea {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.field input:focus,
+.field textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.field textarea { resize: vertical; min-height: 72px; }
+
+/* ── Animations ── */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  50%       { box-shadow: 0 0 22px 5px rgba(239, 68, 68, 0.18); }
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+@keyframes tick {
+  0%   { opacity: 0.45; transform: scale(1.05); }
+  25%  { opacity: 1;    transform: scale(1); }
+  100% { opacity: 1;    transform: scale(1); }
+}
+
+/* ── Vue Toastification overrides ── */
+.Vue-Toastification__toast {
+  background: #ffffff !important;
+  color: #18182e !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 0.88rem !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14) !important;
+  padding: 12px 14px !important;
+  min-height: 52px !important;
+}
+
+.Vue-Toastification__progress-bar { background: #6366f1 !important; }
+.Vue-Toastification__toast--success .Vue-Toastification__progress-bar { background: #22c55e !important; }
+.Vue-Toastification__toast--error   .Vue-Toastification__progress-bar { background: #ef4444 !important; }
+.Vue-Toastification__toast--info    .Vue-Toastification__progress-bar { background: #60a5fa !important; }
+
+.Vue-Toastification__close-button {
+  color: #a8a8c0 !important;
+  opacity: 1 !important;
+  align-self: center !important;
+  font-size: 18px !important;
+}
+.Vue-Toastification__close-button:hover { color: #18182e !important; opacity: 1 !important; }
+
+/* Undo-delete toast */
+.undo-toast { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+.undo-msg   { flex: 1; }
+.undo-btn {
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.08);
+  border: none;
+  color: #18182e;
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.undo-btn:hover { background: rgba(0, 0, 0, 0.14); }
+
+/* ── vue-datepicker-next overrides ── */
+.mx-datepicker { width: 100%; }
+
+.mx-input-wrapper .mx-input {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text) !important;
+  font-size: 0.95rem !important;
+  font-family: inherit !important;
+  padding: 0.7rem 0.9rem !important;
+  height: auto !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+.mx-input-wrapper .mx-input:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+}
+.mx-input-wrapper .mx-icon-calendar,
+.mx-input-wrapper .mx-icon-clear { color: var(--text-muted) !important; }
+
+.mx-datepicker-popup {
+  border-radius: 14px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14) !important;
+  border: 1px solid var(--border-strong) !important;
+  overflow: hidden !important;
+  font-family: inherit !important;
+}
+
+.mx-calendar-header-label button:hover,
+.mx-btn:hover { background: rgba(99, 102, 241, 0.08) !important; color: #6366f1 !important; }
+
+.mx-table-date td.active div,
+.mx-table-date td.active:hover div { background: #6366f1 !important; }
+
+.mx-table-date td.today div { color: #6366f1 !important; font-weight: 700 !important; }
+
+.mx-time-item.active { color: #6366f1 !important; font-weight: 700 !important; }
