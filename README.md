@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/dc272190-9a96-4d2e-999b-60481bbdcf0f
 --- 
  
  ## Screenshots
- 
+
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c1d58a3b-6f63-49f1-a1b2-b78356bb6096" />
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/b018c573-e0db-4f44-b32b-43d5df230382" />
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c9609225-a607-440a-8240-b8bb62c145d5" />
@@ -48,11 +48,11 @@ The trickiest part was making sure the sorting and hero updates were actually re
 ## Stack
 
 - [Vue 3](https://vuejs.org/) — Composition API with `<script setup>`
-- [Nuxt 3](https://nuxt.com/) — SSR off, used for structure and Tailwind integration
+- [Nuxt 3](https://nuxt.com/)  used for structure and Tailwind integration
 - [Tailwind CSS](https://tailwindcss.com/) — utility classes for layout and buttons
 - [vue-datepicker-next](https://github.com/mengxiong10/vue-datepicker-next) — date & time picker
 - [vue-toastification](https://github.com/Maronato/vue-toastification) — toast notifications
-- `localStorage` for persistence — no backend needed
+- `localStorage` for persistence 
 
 ---
 
