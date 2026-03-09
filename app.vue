@@ -1,9 +1,12 @@
 <template>
-  <div class="w-full ">
+  <div class="app">
 
     <!-- Header -->
-    <header class="flex items-center justify-end pt-7 pb-8 mb-8">
-
+    <header class="header">
+      <div class="header-left">
+        <span class="logo-mark" aria-hidden="true">◉</span>
+        <h1 class="site-title">Countdown</h1>
+      </div>
       <button class="btn-primary" @click="openNew">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
           <line x1="12" y1="5" x2="12" y2="19"/>
@@ -16,29 +19,26 @@
     <!-- Hero flip clock: featured timer displayed as flip tiles -->
     <section
       v-if="heroConfig"
-      class="rounded-[var(--radius)] px-6 pt-12 pb-14 text-center mb-10
-             [--tile-w:110px] [--tile-h:130px] [--tile-font:5rem] [--tile-r:18px]
-             max-[600px]:[--tile-w:75px] max-[600px]:[--tile-h:90px] max-[600px]:[--tile-font:3.2rem] max-[600px]:[--tile-r:12px]
-             max-[600px]:px-4 max-[600px]:pt-8 max-[600px]:pb-10"
+      class="hero"
       :style="{ background: heroConfig.bg, '--flip-accent': heroConfig.accent }"
     >
-      <p class="text-[0.62rem] font-bold tracking-[0.2em] uppercase text-white/50 mb-1.5">Next up</p>
-      <h2 class="text-[1.75rem] font-extrabold text-white tracking-[-0.03em] mb-10 [text-shadow:0_2px_10px_rgba(0,0,0,0.2)] max-[600px]:text-[1.2rem] max-[600px]:mb-7">{{ featuredTimer.name }}</h2>
-      <div class="flex items-center justify-center gap-[0.7rem] flex-wrap">
+      <p class="hero-eye">Next up</p>
+      <h2 class="hero-title">{{ featuredTimer.name }}</h2>
+      <div class="flip-row">
         <template v-if="heroConfig.time.days > 0">
           <FlipUnit :value="heroConfig.time.days" label="days" />
-          <span class="text-[2.5rem] font-extrabold text-white/25 leading-none pb-[1.4rem] select-none max-[600px]:text-[1.6rem] max-[600px]:pb-4">:</span>
+          <span class="sep">:</span>
         </template>
         <FlipUnit :value="heroConfig.time.hours" label="hrs" />
-        <span class="text-[2.5rem] font-extrabold text-white/25 leading-none pb-[1.4rem] select-none max-[600px]:text-[1.6rem] max-[600px]:pb-4">:</span>
+        <span class="sep">:</span>
         <FlipUnit :value="heroConfig.time.mins" label="min" />
-        <span class="text-[2.5rem] font-extrabold text-white/25 leading-none pb-[1.4rem] select-none max-[600px]:text-[1.6rem] max-[600px]:pb-4">:</span>
+        <span class="sep">:</span>
         <FlipUnit :value="heroConfig.time.secs" label="sec" />
       </div>
     </section>
 
     <!-- Timer grid -->
-    <main v-if="sortedTimers.length" class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-[1.1rem]">
+    <main v-if="sortedTimers.length" class="grid">
       <TimerCard
         v-for="timer in sortedTimers"
         :key="timer.id"
@@ -50,10 +50,10 @@
     </main>
 
     <!-- Empty state -->
-    <div v-else class="flex flex-col items-center justify-center text-center gap-3 py-24 px-4">
-      <div class="text-5xl opacity-40 mb-2" aria-hidden="true">⏳</div>
-      <h2 class="text-[1.1rem] font-bold text-[var(--text)] tracking-[0.02em]">No timers yet</h2>
-      <p class="text-[0.9rem] text-[var(--text-muted)] mb-2 max-w-[300px]">Create your first countdown for an event that matters.</p>
+    <div v-else class="empty">
+      <div class="empty-icon" aria-hidden="true">⏳</div>
+      <h2 class="empty-title">No timers yet</h2>
+      <p class="empty-sub">Create your first countdown for an event that matters.</p>
       <button class="btn-primary" @click="openNew">Create a Timer</button>
     </div>
 
@@ -72,6 +72,8 @@
 import { ref, computed, onMounted, onUnmounted, h } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useTimers } from './composables/useTimers.js'
+import TimerCard from './components/TimerCard.vue'
+import TimerForm from './components/TimerForm.vue'
 import FlipUnit from './components/FlipUnit.vue'
 
 const toast = useToast()
@@ -194,3 +196,138 @@ function confirmDelete(id) {
   )
 }
 </script>
+
+<style scoped>
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 0 2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-mark {
+  font-size: 1.1rem;
+  color: #6366f1;
+  line-height: 1;
+}
+
+.site-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+/* ── Hero flip clock ── */
+.hero {
+  border-radius: var(--radius);
+  padding: 3rem 1.5rem 3.5rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  --tile-w: 110px;
+  --tile-h: 130px;
+  --tile-font: 5rem;
+  --tile-r: 18px;
+}
+
+.hero-eye {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.4rem;
+}
+
+.hero-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.flip-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.sep {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.25);
+  line-height: 1;
+  padding-bottom: 1.4rem;
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    --tile-w: 75px;
+    --tile-h: 90px;
+    --tile-font: 3.2rem;
+    --tile-r: 12px;
+    padding: 2rem 1rem 2.5rem;
+  }
+  .hero-title { font-size: 1.2rem; margin-bottom: 1.75rem; }
+  .sep { font-size: 1.6rem; padding-bottom: 1rem; }
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.1rem;
+}
+
+
+/* ── Empty state ── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 6rem 1rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
+}
+
+.empty-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.empty-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  max-width: 300px;
+}
+</style>

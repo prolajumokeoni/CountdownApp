@@ -33,13 +33,22 @@ body {
 
 /* ── Buttons ── */
 .btn-primary {
-  @apply inline-flex items-center gap-[0.4rem] py-[0.6rem] px-5
-         bg-indigo-500 text-white border-0 rounded-[var(--radius-sm)]
-         text-sm font-semibold cursor-pointer transition-[background,transform] duration-150;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.25rem;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
   font-family: inherit;
 }
-.btn-primary:hover { @apply bg-[#4f52e8]; }
-.btn-primary:active { @apply scale-[0.97]; }
+.btn-primary:hover  { background: #4f52e8; }
+.btn-primary:active { transform: scale(0.97); }
 
 .btn-ghost {
   display: inline-flex;
@@ -55,10 +64,7 @@ body {
   transition: background 0.15s, color 0.15s;
   font-family: inherit;
 }
-.btn-ghost:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--text);
-}
+.btn-ghost:hover { background: rgba(0, 0, 0, 0.04); color: var(--text); }
 
 .btn-icon {
   display: inline-flex;
@@ -73,7 +79,7 @@ body {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
-.btn-icon:hover { background: rgba(0, 0, 0, 0.07); color: var(--text); }
+.btn-icon:hover         { background: rgba(0, 0, 0, 0.07); color: var(--text); }
 .btn-icon--danger:hover { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
 
 /* ── Form fields ── */
@@ -112,27 +118,22 @@ body {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
   50%       { box-shadow: 0 0 22px 5px rgba(239, 68, 68, 0.18); }
 }
-
 @keyframes ring-pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
 }
-
 @keyframes dot-blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.25; }
 }
-
 @keyframes tick {
   0%   { opacity: 0.45; transform: scale(1.05); }
   25%  { opacity: 1;    transform: scale(1); }
@@ -151,12 +152,10 @@ body {
   padding: 12px 14px !important;
   min-height: 52px !important;
 }
-
-.Vue-Toastification__progress-bar { background: #6366f1 !important; }
+.Vue-Toastification__progress-bar                                      { background: #6366f1 !important; }
 .Vue-Toastification__toast--success .Vue-Toastification__progress-bar { background: #22c55e !important; }
 .Vue-Toastification__toast--error   .Vue-Toastification__progress-bar { background: #ef4444 !important; }
 .Vue-Toastification__toast--info    .Vue-Toastification__progress-bar { background: #60a5fa !important; }
-
 .Vue-Toastification__close-button {
   color: #a8a8c0 !important;
   opacity: 1 !important;
@@ -211,13 +210,9 @@ body {
   overflow: hidden !important;
   font-family: inherit !important;
 }
-
 .mx-calendar-header-label button:hover,
 .mx-btn:hover { background: rgba(99, 102, 241, 0.08) !important; color: #6366f1 !important; }
-
 .mx-table-date td.active div,
 .mx-table-date td.active:hover div { background: #6366f1 !important; }
-
 .mx-table-date td.today div { color: #6366f1 !important; font-weight: 700 !important; }
-
 .mx-time-item.active { color: #6366f1 !important; font-weight: 700 !important; }
