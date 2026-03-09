@@ -1,13 +1,20 @@
 # Countdown App ◈
 
 Multiple countdown timers for important events like birthdays, deadlines, launches
-## Live Demo
+##  Deployed Link
 
 [countdown-app-pied.vercel.app](https://countdown-app-pied.vercel.app/)
 
+
+--- 
+
+## Video Demo
 https://github.com/user-attachments/assets/dc272190-9a96-4d2e-999b-60481bbdcf0f
 
-<img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c063b633-a5c1-4335-a24b-0aecd069cc50" />
+--- 
+ 
+ ## Screenshots
+ 
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c1d58a3b-6f63-49f1-a1b2-b78356bb6096" />
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/b018c573-e0db-4f44-b32b-43d5df230382" />
 <img width="1440" height="900" alt="Image" src="https://github.com/user-attachments/assets/c9609225-a607-440a-8240-b8bb62c145d5" />
